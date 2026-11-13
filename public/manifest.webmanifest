@@ -1,0 +1,21 @@
+{
+ "name": "Handicap Placard By State",
+ "short_name": "Placard By State",
+ "description": "Handicap placard rules in all 50 states and DC: the official form, fee, how long it lasts, who can sign it and whether renewal needs a doctor again.",
+ "start_url": "/en/",
+ "display": "standalone",
+ "background_color": "#ffffff",
+ "theme_color": "#1F4E8C",
+ "icons": [
+  {
+   "src": "/icon-192.png",
+   "sizes": "192x192",
+   "type": "image/png"
+  },
+  {
+   "src": "/icon-512.png",
+   "sizes": "512x512",
+   "type": "image/png"
+  }
+ ]
+}

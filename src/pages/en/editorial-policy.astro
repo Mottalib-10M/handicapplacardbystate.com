@@ -1,0 +1,21 @@
+---
+import PageLayout from '../../layouts/PageLayout.astro';
+import { route } from '../../i18n/routes';
+import { AUTHOR_NAME } from '../../data/site-config';
+const lang = 'en';
+---
+<PageLayout title="Editorial policy of Handicap Placard By State: official forms only" description="How Handicap Placard By State writes its pages: each rule read on the official form or page of the state agency, cited with its date, and no guess where a form is silent." lang={lang} noindex={true} breadcrumbs={[{ label: 'Editorial policy' }]} showAuthor={false}>
+  <article class="prose prose-slate max-w-none prose-headings:font-serif">
+    <h1>Editorial policy</h1>
+    <h2>Where the rules come from</h2>
+    <p>A fee, a length, a signer or a renewal rule enters the site only when it was read on the official form or page of the motor vehicle agency of the state, or in the federal rules of 23 CFR part 1235. Each state is stored with the address of its page and form and the date they were read. Other placard sites and paid evaluation services are read to see what readers ask, never to take a rule.</p>
+    <h2>How pages are written</h2>
+    <p>No fee or length is typed into the text: they live in one data file, and every page computes its figures from it when the site is built, with the same engine as the checker. Where an official document is silent, the site says “not stated” rather than guessing.</p>
+    <h2>What we do not write about</h2>
+    <p>Medical conditions and whether a person qualifies. That is the job of the professional who signs the form and of the state agency.</p>
+    <h2>Money</h2>
+    <p>{AUTHOR_NAME} receives nothing from evaluation services, clinics or lead buyers and links to none of them as a sponsor.</p>
+    <h2>Updates and corrections</h2>
+    <p>Nothing updates by itself. Each page shows the date its sources were last read. A reported error is checked against the official document and, once fixed, moves that date. Write through the <a href={route('contact', lang)}>contact page</a>; the rules are on the <a href={route('method', lang)}>method page</a>.</p>
+  </article>
+</PageLayout>

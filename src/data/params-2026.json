@@ -1,0 +1,11 @@
+{
+  "_lisezmoi": "Registre des sources du site. Les règles des 50 États et de DC sont dans states.json (data-src/states.py), lues le 2026-11-13 sur la page ou le formulaire officiel de chaque agence. Le texte fédéral (23 CFR Part 1235) a été lu le 2026-11-13 sur ecfr.gov (API officielle du Federal Register).",
+  "year": 2026,
+  "retrieved_at": "2026-11-13",
+  "sources": {
+    "cfr_1235": { "url": "https://www.ecfr.gov/current/title-23/chapter-II/subchapter-B/part-1235", "label": { "en": "23 CFR Part 1235, Uniform System for Parking for Persons with Disabilities (eCFR, read November 13, 2026)" } },
+    "cfr_1235_8": { "url": "https://www.ecfr.gov/current/title-23/chapter-II/subchapter-B/part-1235/section-1235.8", "label": { "en": "23 CFR 1235.8, Reciprocity: placards of other states and countries are recognized (eCFR)" } },
+    "cfr_1235_5": { "url": "https://www.ecfr.gov/current/title-23/chapter-II/subchapter-B/part-1235/section-1235.5", "label": { "en": "23 CFR 1235.5, Temporary removable windshield placards: six months at most (eCFR)" } },
+    "cfr_1235_4": { "url": "https://www.ecfr.gov/current/title-23/chapter-II/subchapter-B/part-1235/section-1235.4", "label": { "en": "23 CFR 1235.4, Removable windshield placards: issuance and periodic renewal (eCFR)" } }
+  }
+}

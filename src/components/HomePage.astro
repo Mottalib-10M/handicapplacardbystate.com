@@ -38,33 +38,31 @@ const doors = [
     <p class="mt-2 text-base font-medium text-navy-900 sm:text-lg">{x.answer}</p>
     <p class="mt-2 text-sm font-medium text-navy-700">Independent site, not a DMV: nothing sold, no contact details asked.</p>
   </header>
-  {/* Doors by profile (brief of 2026-11-10, rule 2): the question a reader comes with, before the form. */}
-  <nav data-chrome data-profils aria-label="Start from your question" class="mb-4">
-    <p class="mb-2 text-base font-semibold text-navy-900">Start from your question</p>
-    <ul class="grid gap-2 sm:grid-cols-2">
-      {doors.map((d) => <li><a href={d.href} class="flex min-h-11 items-center justify-between gap-3 rounded-lg border border-navy-300 bg-white px-4 py-1.5 text-[0.95rem] leading-snug font-medium text-accent-700 hover:bg-navy-50"><span>{d.label}</span><span aria-hidden="true">→</span></a></li>)}
-    </ul>
-  </nav>
   <div id="calculator" data-outil data-chrome class="scroll-mt-20"><Tool kind="all" idPrefix="home" /></div>
   <p class="mt-3 text-sm text-navy-600">Official forms of the 50 states and DC · last updated November 13, 2026 · <a href={route('method', lang)} class="underline">How the rules were read</a> · <a href={route('about', lang)} class="underline">Who publishes this</a></p>
+  {/* Doors by profile (brief of 2026-11-10, rule 2), placed right under the checker on this site: the four situations
+      readers write in about most, numbered so a phone reader can say "the third one". */}
+  <aside data-chrome data-profils aria-label="Start from your question" class="mt-4 rounded-lg border border-navy-200 bg-navy-50/60 p-4">
+    <p class="mb-2 text-base font-semibold text-navy-900">Not sure where to start? Pick your situation</p>
+    <ol class="grid list-decimal gap-2 pl-5 sm:grid-cols-2">
+      {doors.map((d) => <li><a href={d.href} class="font-medium text-accent-700 underline-offset-2 hover:underline">{d.label}</a></li>)}
+    </ol>
+  </aside>
   <section class="mt-6"><Body html={x.start(h)} path={path} /></section>
   <Clamp text={x.resume} lang={lang} id="clamp-home" class="my-6" />
   <section class="mt-6"><Body html={x.guide(h)} path={path} /></section>
   <div class="mt-8">
     {x.folds.map((f) => <Fold title={f.title} id={f.id}><Body html={f.html(h)} path={path} /></Fold>)}
-    <div data-chrome>
-      <Fold title="Every guide and every state" id="calculators">
-        <div class="mt-2 grid gap-6 sm:grid-cols-3">
-          {GROUPS.map((g) => (
-            <div>
-              <p class="text-sm font-semibold uppercase tracking-wide text-navy-600">{g.label}</p>
-              <ul class="mt-2 space-y-2 text-sm">
-                {PAGES.filter((p) => p.group === g.id).map((p) => <li><a href={route(p.id, lang)} class="font-medium text-accent-700 underline-offset-2 hover:underline">{p.nav}</a></li>)}
-              </ul>
-            </div>
-          ))}
-        </div>
-      </Fold>
-    </div>
   </div>
+  <section data-chrome class="mt-8 border-t border-navy-200 pt-6" id="calculators">
+    <h2 class="font-serif text-xl font-bold text-navy-900">Every guide and every state</h2>
+    {GROUPS.map((g) => (
+      <article class="mt-4">
+        <h3 class="text-sm font-semibold uppercase tracking-wide text-navy-600">{g.label}</h3>
+        <p class="mt-1 text-sm leading-relaxed">
+          {PAGES.filter((p) => p.group === g.id).map((p, i) => <>{i > 0 && ' · '}<a href={route(p.id, lang)} class="font-medium text-accent-700 underline-offset-2 hover:underline">{p.nav}</a></>)}
+        </p>
+      </article>
+    ))}
+  </section>
 </PageLayout>

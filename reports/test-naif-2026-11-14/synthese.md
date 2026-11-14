@@ -1,0 +1,31 @@
+# Synthèse du test naïf du 2026-11-14 : handicapplacardbystate.com
+
+Notes : testeur 1 = 7/8/8, testeur 2 = 7/8/8, testeur 3 = 6/7/8 (Clarté / Facilité / Utilité).
+
+| # | Difficulté relevée | Testeurs | Décision |
+|---|---|---|---|
+| 1 | « Not stated on the form » affiché en gros à la place du prix (Colorado) | 1, 2, 3 | **corrigé** : le gros chiffre est toujours une donnée connue (prix, sinon date de fin, sinon numéro du formulaire) ; le prix manquant est dit en mots sous le résultat : « Fee not printed on form DR 2219: ask your county motor vehicle office before you go » (test « missing data is never the large answer », sur les 51 États × 2 types × 7 outils) |
+| 2 | « Not stated » en gros comme date de fin (Alabama, 2e calculateur) | 1, 2, 3 | **corrigé** : l'outil de renouvellement répond alors à la question connue (« A new doctor’s form at renewal? Yes ») et dit en mots « The form prints no end date: look at the date on your placard, or ask your county license plate issuing office » |
+| 3 | Californie : « June 30 of an odd-numbered year » au lieu de l'année calculée | 1, 2, 3 | **corrigé** : premier 30 juin d'une année impaire à partir du mois de délivrance (mars 2026 → June 30, 2027 ; juillet 2027 → June 30, 2029), règle du DMV (REG 195, page citée) ; tests ajoutés ; page méthode mise à jour |
+| 4 | Chapeaux des pages État cassés (« lasts not stated on the form », « lasts no expiration date », « charged at a fee the form does not print », « june ») | 1, 2, 3 | **corrigé** : phrase construite selon les données (`permSentence`) : « …is free and never expires », « …lasts 3 years; its form does not print the fee, so ask the office where you apply » ; test sur les 51 chapeaux |
+| 5 | Année affichée « 2,026 » | 1, 2, 3 | **corrigé** : l'année est une liste (2010–2030), plus un champ numérique formaté avec séparateur de milliers. Défaut de trame (NumberField) signalé |
+| 6 | « form Form 861 », « form Form 96-0104 », « form Form 10-336 » | 1, 2, 3 | **corrigé** : `formRef` (« Form 861 », « form REG 195 », « the Disabled Placard application ») dans titres H1, fiches, tableaux, outils ; test |
+| 7 | Ligne « New medical certification — New medical certification » | 2, 3 | **corrigé** : libellé « Doctor’s form again at renewal? », valeurs « Yes, a new doctor’s form » / « No new doctor’s form » |
+| 8 | Colorado : « Sometimes (see below) » sans réponse en dessous | 1, 2, 3 | **corrigé** : la fiche du Colorado (déjà citée) dit qu'à chaque nouvelle plaque de trois ans un professionnel valide : classé « Yes, a new doctor’s form » ; les autres cas « partly » affichent la règle en clair (« Depends on your case. Renewal needs… except at 80 or older… ») |
+| 9 | Arizona : « Renewal fee: Free » alors qu'il n'y a rien à renouveler | 2, 3 | **corrigé** : « Nothing to renew » (Arizona, Indiana, Maryland, Utah, Wyoming) |
+| 10 | Accroche de l'accueil « DC,; » et comptes flous | 1, 2, 3 | **corrigé** : « A permanent handicap placard is free in 35 of the 50 states and DC. In 18 of them, you renew it without a new doctor’s signature. » ; le texte dit aussi combien de formulaires n'impriment aucun prix (35 + 5 payants + 11) |
+| 11 | « open "More options" » alors que le bouton s'appelle « More details (optional) » ; « Already filled in: birth month September » inquiète | 1, 2, 3 | **corrigé** : renvoi harmonisé ; le résumé dit « example birth month, used only in Florida, Michigan and Nebraska: September ». Le mot « Already filled in » vient de la trame (signalé) |
+| 12 | Jargon de méthode dans les résultats (« through search excerpts (the site refuses automated readers) », « no full list on the page we read ») | 1, 2, 3 | **corrigé** : « Source: the official page of …, checked on November 13, 2026 » ; le détail de la lecture reste sur la page méthode |
+| 13 | Références « 23 CFR … », « jurisdictions » dans les phrases de l'accueil | 1, 2, 3 | **corrigé** sur l'accueil et dans les outils : liens nommés « federal rule », références dans les sources et la page méthode ; « jurisdictions » remplacé |
+| 14 | Pas de lien visible vers le formulaire officiel | 2, 3 | **corrigé** : lien en gras « Open form MVR 32-6-230 on the Alabama Department of Revenue… site » sous « How to apply » sur chaque page État (adresse déjà en source) |
+| 15 | Deux calculateurs par page État qui redemandent mois et année | 1, 2, 3 | **corrigé** : le second calculateur répond désormais à une autre question, « Can your health professional sign the [State] form? » (un seul choix : la profession) |
+| 16 | Liste des 51 États trop longue, liens peu visibles | 1, 2, 3 | **corrigé** en partie : phrase « Tap the name of your state to open its page, or pick it in the checker at the top » ; colonnes renommées « Permanent placard: cost » pour que « Not printed on the form » se lise comme un prix |
+| 17 | Adresse en France sans explication | 1, 2, 3 | **corrigé** : phrase sur la page About (société basée en France, aucun lien avec une agence ou une clinique, chaque règle renvoie à l'agence américaine) |
+| 18 | Menu « How the rules were read » peu clair | 2, 3 | **corrigé** : « How we checked the rules » |
+| 19 | « Pick your situation » placé après le calculateur | 1, 3 | **non retenu** : bloc de la trame, placé juste sous le résultat comme sur tous les sites ; la phrase-réponse et le calculateur restent en premier (RECETTE premier écran) |
+| 20 | Mots différents pour une même chose : placard / permit / certificate | 1, 3 | **corrigé** en partie : textes de renouvellement de l'Arkansas et de l'Alaska passés à « placard » ; les notes rédigées gardent le mot officiel de l'État quand il diffère |
+| 21 | « No expiration date » / « For life » / « never expire » | 1, 3 | **non retenu** : deux règles différentes (Maryland : valable jusqu'au décès ; Arizona, Indiana… : sans date de fin) |
+| 22 | Californie : « Up to 6 months » et « Up to 180 days » | 3 | **non retenu** : un seul testeur, pas de contradiction (le texte reprend la formule du DMV) |
+| 23 | Sigles MVD, SCDMV, « speech-language pathologist » | 3 | **non retenu** : un seul testeur ; noms officiels des agences et des professions |
+| 24 | « Full calculator: Renewal → » laisse croire que l'outil est incomplet | 3 | **non retenu** : un seul testeur, libellé de la trame |
+| 25 | « Other states » ambigu dans le menu | 1 | **non retenu** : un seul testeur |

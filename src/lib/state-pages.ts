@@ -3,7 +3,7 @@
  * is written by hand for each state in src/content/states/*.ts (what is particular there), so no two pages read alike.
  */
 import type { FAQ, PageDef } from './page-types';
-import { STATES, feeText, lasts, renewWord, type State } from './engine/placard';
+import { STATES, feeText, lasts, renewWord, tempRenew, formRef, permSentence, lcFirst, type State } from './engine/placard';
 import { NOTES_1 } from '../content/states/notes-1';
 import { NOTES_2 } from '../content/states/notes-2';
 import { NOTES_3 } from '../content/states/notes-3';
@@ -70,23 +70,24 @@ export function statePages(): PageDef[] {
     return {
       id: st.slug, group: 'states', order: 200 + i, slug: st.slug,
       nav: st.name,
-      card: `${st.form}: permanent ${permFee.toLowerCase()}, ${lasts(st, 'perm').toLowerCase()}; temporary ${tempFee.toLowerCase()}.`,
+      card: `${st.form}: permanent ${lcFirst(permFee)}, ${lcFirst(lasts(st, 'perm'))}; temporary ${lcFirst(tempFee)}.`,
       title: titleOf(st), description: descriptionOf(st),
-      h1: `${kw}: form ${st.form}, cost and how long it lasts`,
-      intro: `The ${kw} for a permanent disability is ${st.perm.fee === null ? 'charged at a fee the form does not print' : st.perm.fee === 0 ? 'free' : `${permFee}`} and lasts ${lasts(st, 'perm').toLowerCase()}.`,
+      h1: `${kw}: ${formRef(st)}, cost and how long it lasts`,
+      intro: permSentence(st, kw),
       resume: `${note.resume} ${EXTRA[st.code] ?? ''} Source: ${st.agency}, ${st.form} (“${st.form_title}”), read on November 13, 2026.`.replace(/\s+/g, ' '),
       faqs: FAQS[st.code] ?? [],
       body: (h) => `
 <h2>How to apply for the ${kw}</h2>
 <p>${note.how}</p>
+<p><strong>${h.src(st.form_url ? `form_${st.code}` : `st_${st.code}`, st.form_url ? `Open ${formRef(st)} on the ${st.agency} site` : `Open the ${st.agency} page`)}</strong></p>
+${h.mini('signer', { t: `Can your health professional sign the ${st.name} form?`, p: ['pro'], d: { st: st.code } })}
 ${h.table(['', 'Permanent placard', 'Temporary placard'], [
   ['Cost', permFee, tempFee],
   ['Lasts', lasts(st, 'perm'), lasts(st, 'temp')],
-  ['Renewal', renewWord(st), st.temp.renew],
-], `${st.name}: the two placards on form ${st.form}`)}
+  ['Renewal', renewWord(st), tempRenew(st)],
+], `${st.name}: the two placards on ${formRef(st)}`)}
 <h2>Renewing the ${kw}</h2>
 <p>${note.renew}</p>
-${h.mini('renew', { t: `When does your ${st.name} placard end?`, p: ['type', 'm', 'y'], d: { st: st.code } })}
 `,
       tool: 'state', toolArg: { st: st.code },
       related: ['handicap-placard-renewal', 'who-can-sign-a-handicap-placard-form', 'handicap-placard-in-another-state', 'temporary-handicap-placard'],

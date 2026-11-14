@@ -22,7 +22,7 @@ const homeHref = route('home', lang);
 const marque = (() => { const nom = SITE_NAMES[lang]; const i = BRAND_ACCENT ? nom.lastIndexOf(BRAND_ACCENT) : -1; return i < 0 ? { avant: nom, accent: '', apres: '' } : { avant: nom.slice(0, i), accent: BRAND_ACCENT, apres: nom.slice(i + BRAND_ACCENT.length) }; })();
 const cats = navCategories(lang); const direct = navDirect(lang); const footerCols = footerColumns(lang); const popular = popularLinks(lang);
 const otherLocales = LOCALES.filter((l) => l !== lang);
-const mobileExtra = [{ href: homeHref, label: 'Home' }, ...['method', 'about'].map((id) => ({ href: route(id, lang), label: id === 'method' ? 'How the rules were read' : 'About' }))];
+const mobileExtra = [{ href: homeHref, label: 'Home' }, ...['method', 'about'].map((id) => ({ href: route(id, lang), label: id === 'method' ? 'How we checked the rules' : 'About' }))];
 // Un emplacement passé sous condition ({cond && <p slot=…>}) compte comme présent pour
 // Astro.slots.has : on regarde ce qu'il rend, sinon une rangée vide de 13 px s'ajoute (/en/).
 const crumbAside = Astro.slots.has('crumb-aside') ? (await Astro.slots.render('crumb-aside')).trim() : '';

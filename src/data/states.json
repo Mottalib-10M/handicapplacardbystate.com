@@ -66,7 +66,7 @@
    ],
    "cert_full": true,
    "renew_doctor": "yes",
-   "renew_text": "Permanent permits are renewable upon reapplication at a DMV office.",
+   "renew_text": "A permanent placard is renewed with a new application at a DMV office.",
    "slug": "alaska-handicap-placard",
    "read": "2026-11-13"
   },
@@ -129,7 +129,7 @@
    ],
    "cert_full": true,
    "renew_doctor": "no",
-   "renew_text": "The permanent certificate is renewed without a new disability certification.",
+   "renew_text": "The permanent placard is renewed without a new disability certification.",
    "slug": "arkansas-handicap-placard",
    "read": "2026-11-13"
   },
@@ -199,8 +199,8 @@
     "physical therapist (temporary placards only)"
    ],
    "cert_full": true,
-   "renew_doctor": "partly",
-   "renew_text": "A new placard resets the three-year certification date with a professional’s validation.",
+   "renew_doctor": "yes",
+   "renew_text": "Every three years, a new placard is validated by a professional and the certification date starts over.",
    "slug": "colorado-handicap-placard",
    "read": "2026-11-13"
   },

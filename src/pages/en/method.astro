@@ -16,7 +16,7 @@ const end = K.expiry(ex, 'perm', K.EX.year, K.EX.month);
 const kinds: Array<[string, string]> = [['years', 'A fixed number of years from issue'], ['birthday', 'A number of years, ending on the holder’s birthday'], ['ca', 'A statewide cycle (California: June 30 of odd-numbered years)'], ['provider', 'Set by the medical professional, up to a ceiling'], ['none', 'No expiration date'], ['life', 'Valid for life'], ['local', 'Set by the local issuing office (New York)']];
 const rows = kinds.map(([k, l]) => [l, String(C.kinds[k] ?? 0)]).concat([['Not stated on what we read', String(C.kinds.unstated ?? 0)]]);
 ---
-<PageLayout title={title} description={description} lang={lang} jsonLd={[webPageSchema({ name: 'How the rules were read', description, path, lang }), breadcrumbSchema([{ name: 'Home', path: route('home', lang) }, { name: 'How the rules were read', path }])]} breadcrumbs={[{ label: 'How the rules were read' }]}>
+<PageLayout title={title} description={description} lang={lang} jsonLd={[webPageSchema({ name: 'How we checked the rules', description, path, lang }), breadcrumbSchema([{ name: 'Home', path: route('home', lang) }, { name: 'How we checked the rules', path }])]} breadcrumbs={[{ label: 'How we checked the rules' }]}>
   <article class="prose prose-slate max-w-none prose-headings:font-serif">
     <h1>How the handicap placard rules were read</h1>
     <p><strong>Every handicap placard answer on this site comes from one record per state, built from the official application form or page of its motor vehicle agency, read on {K.day(K.READ)}. The checker applies that record to the placard type and month you enter; nothing is estimated.</strong></p>
@@ -24,7 +24,7 @@ const rows = kinds.map(([k, l]) => [l, String(C.kinds[k] ?? 0)]).concat([['Not s
     <h2>1. The documents</h2>
     <p>For each of the {C.total} jurisdictions, the record holds the agency, the office where you apply, the form number and title, the fee and length of the permanent and the temporary placard, the professions named as signers, and the renewal rule, each with the address of the page or form. {C.direct} records were read directly on the agency site or its PDF form. The other {C.total - C.direct} agency sites refuse automated readers; their facts were read in search excerpts of the same official pages, limited to the agency’s own domain, and each of those state pages says so. No access refusal was bypassed. The federal model was read on eCFR: <Fragment set:html={src('cfr_1235', '23 CFR part 1235')} />, sections <Fragment set:html={src('cfr_1235_4', '1235.4')} />, <Fragment set:html={src('cfr_1235_5', '1235.5')} /> and <Fragment set:html={src('cfr_1235_8', '1235.8')} />.</p>
     <h2>2. How long a placard lasts</h2>
-    <p>Each permanent placard rule falls into one of these kinds. The end month adds the length to the month of issue, or uses your birth month where the state ends the placard on your birthday. For California no year is computed, because the agency gives the cycle but not which cycle a new placard starts in.</p>
+    <p>Each permanent placard rule falls into one of these kinds. The end month adds the length to the month of issue, or uses your birth month where the state ends the placard on your birthday. For California, where every permanent placard expires on June 30 of an odd-numbered year, the end date is the first such June 30 on or after the month of issue (a placard issued in March 2026 ends on June 30, 2027); the year printed on your placard governs.</p>
     <Fragment set:html={table(['Rule for the permanent placard', 'Jurisdictions'], rows, `Permanent placard rules of the 50 states and DC, read on ${K.day(K.READ)}`, ['l', 'r'])} />
     <h2>3. Who may sign</h2>
     <p>The signer checker looks for the profession in the list printed on the form. “Yes” when it is named, “Yes, with a limit” when it is named with a restriction (temporary placards only, blindness only, under a physician’s protocol), “Not on the list” when the form gives a complete list without it, and “Not named” when the form only speaks of a provider in general.</p>
@@ -32,7 +32,7 @@ const rows = kinds.map(([k, l]) => [l, String(C.kinds[k] ?? 0)]).concat([['Not s
     <p>A permanent placard issued in {ex.name} in March {K.EX.year}: form {ex.form}, cost {K.fee(ex.perm.fee).toLowerCase()}, length {K.lasts(ex, 'perm').toLowerCase()}, end {end.text}. Renewal: {K.renewWord(ex).toLowerCase()}, because the form says the doctor is not required to complete the disability statement at renewal.</p>
     <h2>5. Limits</h2>
     <ul>
-      <li>A field the official document does not print is shown as “not stated”, never guessed.</li>
+      <li>A field the official document does not print is shown as “not printed on the form”, with the office to ask, never guessed.</li>
       <li>Forms change: the current form of your state and the date printed on your placard govern.</li>
       <li>Office service fees, license plates and organizational placards are not covered.</li>
       <li>Nothing here is legal or medical advice, and the site does not say whether you qualify.</li>

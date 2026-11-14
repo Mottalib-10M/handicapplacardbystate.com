@@ -24,9 +24,11 @@ export const STATE_OPTIONS = [...STATES].sort((a, b) => a.name.localeCompare(b.n
 
 export const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
-/** A fee as the reader reads it: "Free", "$5", "$26.50", or "Not stated". */
+/** Answer of the official form when it prints nothing (testers 2026-11-14: never "Not stated" as the answer). */
+export const NOT_PRINTED = 'Not printed on the form';
+/** A fee as the reader reads it: "Free", "$5", "$26.50", or "Not printed on the form". */
 export function feeText(x: number | null): string {
-  if (x === null) return 'Not stated on the form';
+  if (x === null) return NOT_PRINTED;
   if (x === 0) return 'Free';
   return Number.isInteger(x) ? `$${x}` : `$${x.toFixed(2)}`;
 }
@@ -42,8 +44,38 @@ export function lasts(s: State, type: 'perm' | 'temp'): string {
     case 'life': return 'For life';
     case 'provider': return s.perm.n ? `Set by your medical professional, up to ${s.perm.n} years` : 'Set by your medical professional';
     case 'local': return 'Set by the local office that issues it';
-    default: return 'Not stated on the form';
+    default: return NOT_PRINTED;
   }
+}
+
+/** Lowercase the first letter only (a following "June 30" keeps its capital). */
+export const lcFirst = (x: string) => x.charAt(0).toLowerCase() + x.slice(1);
+
+/** The form as a sentence names it: "Form 861", "form REG 195", "the Disabled Placard application". */
+export function formRef(s: State): string {
+  if (/^(State )?Form\b/.test(s.form)) return s.form;
+  if (/^[A-Z]{1,6}[- ]?\d|^\d|^[A-Z]{2,}[- ]?[A-Z]?\d/.test(s.form)) return `form ${s.form}`;
+  if (/^Medical statement/.test(s.form)) return `a ${lcFirst(s.form)}`;
+  return `the ${s.form}`;
+}
+
+/** The permanent placard's fee and length in one plain sentence, without "not stated" in the middle of it. */
+export function permSentence(s: State, subject: string): string {
+  const fee = s.perm.fee, k = s.perm.kind;
+  const length = k === 'none' ? 'never expires' : k === 'life' ? 'stays valid for life' : k === 'local' ? 'lasts as long as the local office that issues it decides'
+    : k === 'provider' ? `lasts as long as your medical professional sets${s.perm.n ? `, up to ${s.perm.n} years` : ''}` : k === null ? null : `lasts ${lcFirst(lasts(s, 'perm'))}`;
+  if (fee === null && length === null) return `The form for the ${subject} prints neither its fee nor how long it lasts: ask the office where you apply.`;
+  if (fee === null) return `The ${subject} for a permanent disability ${length}; its form does not print the fee, so ask the office where you apply.`;
+  const price = fee === 0 ? 'is free' : `costs ${feeText(fee)}`;
+  if (length === null) return `The ${subject} for a permanent disability ${price}; its form does not print how long it lasts.`;
+  return `The ${subject} for a permanent disability ${price} and ${length}.`;
+}
+
+/** The next June 30 of an odd-numbered year on or after the month of issue (California, REG 195 cycle). */
+export function caEnd(year: number, month: number): number {
+  let y = year % 2 === 1 ? year : year + 1;
+  if (y === year && month > 6) y += 2;
+  return y;
 }
 
 export interface Expiry { year: number | null; month: number | null; text: string }
@@ -58,20 +90,25 @@ export function expiry(s: State, type: 'perm' | 'temp', year: number, month: num
   switch (s.perm.kind) {
     case 'years': return add(s.perm.n! * 12);
     case 'birthday': return at(year + s.perm.n!, birthMonth);
-    // DMV gives the cycle (June 30 of odd-numbered years), not which cycle a new placard starts in: no year is guessed.
-    case 'ca': return { year: null, month: 6, text: 'June 30 of an odd-numbered year: the year printed on your placard' };
+    // DMV: every permanent placard expires on June 30 of an odd-numbered year: the first one after the month of issue.
+    case 'ca': { const y = caEnd(year, month); return { year: y, month: 6, text: `June 30, ${y}` }; }
     case 'none': return { year: null, month: null, text: 'Never: no expiration date' };
     case 'life': return { year: null, month: null, text: 'Never: valid for life' };
     case 'provider': return { year: null, month: null, text: 'The date your medical professional sets' };
     case 'local': return { year: null, month: null, text: 'The date your local issuing office prints' };
-    default: return { year: null, month: null, text: 'Not stated: check the date printed on the placard' };
+    default: return { year: null, month: null, text: 'Not printed on the form: look at the date on your placard' };
   }
 }
 
 /** Whether a renewal asks for a new medical certification, in words. */
 export function renewWord(s: State): string {
-  return { no: 'No new doctor’s form', yes: 'New medical certification', partly: 'Sometimes (see below)' }[s.renew_doctor ?? 'x'] ?? 'Not stated';
+  if (s.perm.kind === 'none' || s.perm.kind === 'life') return 'Nothing to renew, it does not expire';
+  if (s.renew_doctor === 'partly') return `Depends on your case. ${s.renew_text}`;
+  return { no: 'No new doctor’s form', yes: 'Yes, a new doctor’s form' }[s.renew_doctor ?? 'x'] ?? `${NOT_PRINTED}, so ask the office where you apply`;
 }
+
+/** What happens to a temporary placard when it ends, without the source's "not stated on the page we read". */
+export const tempRenew = (s: State) => (/^Not stated/.test(s.temp.renew) ? `${NOT_PRINTED}, so ask the office where you apply` : s.temp.renew);
 
 /** Professions a reader may ask about, and the words that identify them on a form. */
 export const PROFESSIONS = [
